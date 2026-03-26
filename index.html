@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator | HACKACK.TECH</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href=".style.css">
+    
+    <link rel="icon" type="image/png" href="./logo.png">
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-800 via-blue-900 to-sky-900 flex flex-col items-center justify-center p-4 font-sans text-gray-800">
+
+    <header class="mb-8 flex flex-col items-center gap-2">
+<a href="https://hackack.tech" target="_blank"
+   class="flex items-center gap-3 bg-white/20 backdrop-blur-md px-6 py-3 rounded-full border border-white/30 shadow-lg hover:opacity-90 transition">
+
+    <img src="./logo.png" alt="Logo" class="w-8 h-8 object-contain">
+    
+    <span class="text-xl font-bold text-white tracking-wide">
+        hackack.tech
+    </span>
+</a>
+        </div>
+    </header>
+    <div class="bg-white/30 backdrop-blur-lg border border-white/40 shadow-2xl rounded-2xl p-6 w-full max-w-4xl flex flex-col md:flex-row gap-8">
+        
+        <div class="flex-1 space-y-5">
+            <div>
+                <h1 class="text-3xl font-bold text-white drop-shadow-sm mb-1">QR Generator</h1>
+                <p class="text-white/80 text-sm">Create and customize your QR codes in real-time.</p>
+            </div>
+
+            <div>
+                <label for="textInput" class="block text-sm font-semibold text-white/90 mb-1">URL or Text</label>
+                <textarea id="textInput" rows="3" placeholder="Enter your text or URL here..." 
+                    class="w-full bg-white/50 border border-white/50 rounded-lg p-3 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/70 transition"></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="colorDark" class="block text-sm font-semibold text-white/90 mb-1">Foreground</label>
+                    <input type="color" id="colorDark" value="#000000" class="w-full h-10 rounded cursor-pointer border-0 bg-transparent">
+                </div>
+                <div>
+                    <label for="colorLight" class="block text-sm font-semibold text-white/90 mb-1">Background</label>
+                    <input type="color" id="colorLight" value="#ffffff" class="w-full h-10 rounded cursor-pointer border-0 bg-transparent">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="errorCorrection" class="block text-sm font-semibold text-white/90 mb-1">Error Correction</label>
+                    <select id="errorCorrection" class="w-full bg-white/50 border border-white/50 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-white/70">
+                        <option value="L">Low (7%)</option>
+                        <option value="M" selected>Medium (15%)</option>
+                        <option value="Q">Quartile (25%)</option>
+                        <option value="H">High (30%)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="sizeInput" class="block text-sm font-semibold text-white/90 mb-1">
+                        Size: <span id="sizeValue">250</span>px
+                    </label>
+                    <input type="range" id="sizeInput" min="100" max="500" value="250" step="10" class="w-full h-2 bg-white/50 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                </div>
+            </div>
+
+            <div class="flex gap-4 pt-2">
+                <button id="clearBtn" class="flex-1 bg-white/40 hover:bg-white/60 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-200 backdrop-blur-sm border border-white/30">Clear</button>
+                <button id="downloadBtn" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-lg">Download PNG</button>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col items-center justify-center bg-white/40 border border-white/30 rounded-xl p-6 min-h-[300px]">
+            <div id="qrContainer" class="bg-white p-2 rounded-lg shadow-md hidden transition-all duration-300">
+                <canvas id="qrCanvas"></canvas>
+            </div>
+            <p id="placeholderText" class="text-gray-600 text-center font-medium">Your QR code will appear here</p>
+        </div>
+    </div>
+
+    <script src="./qrcode.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
