@@ -11,3 +11,32 @@
     background: rgba(255, 255, 255, 0.5); 
     border-radius: 4px; 
 }
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+/* Keep QR fully visible in UI without changing generated pixel resolution */
+#qrContainer {
+    width: min(100%, var(--preview-size, 350px));
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#qrCanvas {
+    display: block;
+    width: var(--preview-size, 350px);
+    max-width: 100%;
+    height: auto;
+    touch-action: manipulation;
+    image-rendering: pixelated;
+}
+
+@media (max-width: 768px) {
+    #qrContainer {
+        width: calc(100vw - 3rem);
+    }
+}

@@ -10,6 +10,9 @@ const qrContainer = document.getElementById('qrContainer');
 const placeholderText = document.getElementById('placeholderText');
 const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+const exportCanvas = document.createElement('canvas');
+const PREVIEW_SIZE_DESKTOP = 350;
+const PREVIEW_SIZE_MOBILE = 260;
 
 // Debounce function to limit how often the QR code regenerates while typing
 function debounce(func, delay) {
@@ -20,6 +23,11 @@ function debounce(func, delay) {
             func.apply(this, args);
         }, delay);
     };
+}
+
+function getPreviewSize() {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    return isMobile ? PREVIEW_SIZE_MOBILE : PREVIEW_SIZE_DESKTOP;
 }
 
 // Core Generation Function
@@ -40,8 +48,8 @@ function generateQRCode() {
     qrContainer.classList.remove('hidden');
     placeholderText.classList.add('hidden');
 
-    // QRCode generation options
-    const options = {
+    // Full-resolution QR generation options (used for downloading)
+    const exportOptions = {
         width: size,
         margin: 1,
         errorCorrectionLevel: errorCorrection.value,
@@ -51,9 +59,30 @@ function generateQRCode() {
         }
     };
 
-    // Generate QR Code onto the Canvas using the local library
-    QRCode.toCanvas(qrCanvas, text, options, function (error) {
-        if (error) console.error("Error generating QR Code:", error);
+    const previewSize = getPreviewSize();
+
+    // Keep CSS display size aligned with preview render size.
+    qrContainer.style.setProperty('--preview-size', `${previewSize}px`);
+    qrCanvas.style.setProperty('--preview-size', `${previewSize}px`);
+
+    // Generate full-resolution QR in hidden export canvas
+    QRCode.toCanvas(exportCanvas, text, exportOptions, function (error) {
+        if (error) console.error("Error generating export QR Code:", error);
+    });
+
+    // Generate preview QR directly at preview size for crisp on-screen rendering
+    const previewOptions = {
+        width: previewSize,
+        margin: 1,
+        errorCorrectionLevel: errorCorrection.value,
+        color: {
+            dark: colorDark.value,
+            light: colorLight.value
+        }
+    };
+
+    QRCode.toCanvas(qrCanvas, text, previewOptions, function (error) {
+        if (error) console.error("Error generating preview QR Code:", error);
     });
 }
 
@@ -66,6 +95,7 @@ colorDark.addEventListener('input', generateQRCode);
 colorLight.addEventListener('input', generateQRCode);
 errorCorrection.addEventListener('change', generateQRCode);
 sizeInput.addEventListener('input', generateQRCode);
+window.addEventListener('resize', debounce(generateQRCode, 120));
 
 // Clear functionality
 clearBtn.addEventListener('click', () => {
@@ -83,7 +113,7 @@ downloadBtn.addEventListener('click', () => {
         return;
     }
 
-    const dataUrl = qrCanvas.toDataURL("image/png");
+    const dataUrl = exportCanvas.toDataURL("image/png");
 
     // Create safe filename (max 20 chars)
     let fileName = text
